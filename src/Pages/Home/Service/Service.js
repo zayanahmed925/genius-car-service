@@ -5,11 +5,11 @@ const Service = ({ service }) => {
     return (
         <div className='service-container'>
 
-            <img src={img} alt="" />
-            <h2>Service: {name}</h2>
+            <img src={img} className='w-100' alt="" />
+            <h2> {name}</h2>
             <p>Price: {price}</p>
             <p><small>{description}</small></p>
-            <button>Book</button>
+            <button className='btn btn-primary'>BOOK FOR {name}</button>
         </div>
     );
 };

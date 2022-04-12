@@ -19,7 +19,7 @@ const experts = [
 const Experts = () => {
     return (
         <div className='container'>
-            <h1 className='text-center text-primary'>Our Experts</h1>
+            <h1 className='text-center text-primary my-3'>Our Experts</h1>
             <div className='row'>
                 {
                     experts.map(expert => <Expert
