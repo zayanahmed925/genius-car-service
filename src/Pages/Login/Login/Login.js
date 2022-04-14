@@ -1,9 +1,12 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
 import SocialLogin from '../SocialLogin/SocialLogin';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
     const emailRef = useRef('');
@@ -36,8 +39,13 @@ const Login = () => {
     }
     const handleReset = async () => {
         const email = emailRef.current.value;
-        await sendPasswordResetEmail(email);
-        alert('Sent email');
+        if (email) {
+            await sendPasswordResetEmail(email);
+            toast('Sent email');
+        }
+        else {
+            toast('Please Enter Your email');
+        }
     }
 
     if (user) {
@@ -68,8 +76,9 @@ const Login = () => {
                 </Button>
             </Form>
             <p>New to Genious? <Link to='/register' onClick={handleRegister} className='text-primary text-decoration-none'>Please Register</Link></p>
-            <p>Forget Password  <Link to='/register' onClick={handleReset} className='text-primary text-decoration-none'>Reset Password</Link></p>
+            <p>Forget Password  <a style={{ cursor: 'pointer' }} onClick={handleReset} className='text-primary text-decoration-none pe-auto '>Reset Password</a></p>
             <SocialLogin></SocialLogin>
+            <ToastContainer />
         </div>
     );
 };
