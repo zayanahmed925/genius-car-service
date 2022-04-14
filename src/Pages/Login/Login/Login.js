@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const Login = () => {
     const emailRef = useRef('');
@@ -14,7 +15,17 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
+    const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
     const location = useLocation();
+
+    let errorElement;
+    if (error) {
+        errorElement =
+            <div style={{ color: 'red' }}>
+                <p>Error: {error?.message}</p>
+            </div>
+
+    }
     let from = location.state?.from?.pathname || "/";
 
     const handleSubmit = (event) => {
@@ -22,6 +33,11 @@ const Login = () => {
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
         signInWithEmailAndPassword(email, password);
+    }
+    const handleReset = async () => {
+        const email = emailRef.current.value;
+        await sendPasswordResetEmail(email);
+        alert('Sent email');
     }
 
     if (user) {
@@ -46,11 +62,14 @@ const Login = () => {
                     <Form.Label>Password</Form.Label>
                     <Form.Control ref={passwordRef} type="password" placeholder="Password" required />
                 </Form.Group>
+                {errorElement}
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
             </Form>
             <p>New to Genious? <Link to='/register' onClick={handleRegister} className='text-primary text-decoration-none'>Please Register</Link></p>
+            <p>Forget Password  <Link to='/register' onClick={handleReset} className='text-primary text-decoration-none'>Reset Password</Link></p>
+            <SocialLogin></SocialLogin>
         </div>
     );
 };
