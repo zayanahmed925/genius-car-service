@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
@@ -11,6 +11,7 @@ const Register = () => {
         loading,
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
+    const [agree, setAgree] = useState(false);
 
     const navigate = useNavigate();
 
@@ -26,7 +27,10 @@ const Register = () => {
         const email = event.target.email.value
         const password = event.target.password.value
 
-        createUserWithEmailAndPassword(email, password);
+        if (agree) {
+            createUserWithEmailAndPassword(email, password);
+        }
+
     }
 
     return (
@@ -50,7 +54,9 @@ const Register = () => {
                     <Form.Label>Password</Form.Label>
                     <Form.Control type="password" name='password' placeholder="Password" required />
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <input onClick={() => setAgree(!agree)} className='my-3' type="checkbox" name="terms" id="" />
+                <label className={`ps-2 ${agree ? '' : 'text-danger'}`} htmlFor="terms">Accept Terms and Condition</label><br />
+                <Button className='w-25 ' disabled={!agree} variant="primary" type="submit">
                     Submit
                 </Button>
             </Form>
