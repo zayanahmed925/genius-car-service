@@ -8,7 +8,7 @@ import SocialLogin from '../SocialLogin/SocialLogin';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PageTitle from '../../../Shared/PageTitle/PageTitle';
-
+import axios from 'axios';
 const Login = () => {
     const emailRef = useRef('');
     const passwordRef = useRef('');
@@ -32,11 +32,14 @@ const Login = () => {
     }
     let from = location.state?.from?.pathname || "/";
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
-        signInWithEmailAndPassword(email, password);
+        await signInWithEmailAndPassword(email, password);
+        const { data } = await axios.post('http://localhost:5000/login', { email })
+        localStorage.setItem('accessToken', data.accessToken);
+        console.log(data)
     }
     const handleReset = async () => {
         const email = emailRef.current.value;
